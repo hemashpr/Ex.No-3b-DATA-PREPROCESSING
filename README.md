@@ -29,7 +29,7 @@ df.info()
 print(df.shape)
 
 # Step 3: Separate independent and dependent variables
-x = df[['Country', 'Age', 'Salary']]
+x = df[['Country', 'Age', 'Salary']] 
 y = df[['Purchased']].values
 # Convert X into array
 x = df[['Country', 'Age', 'Salary']].values
