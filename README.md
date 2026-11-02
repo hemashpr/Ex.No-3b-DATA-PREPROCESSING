@@ -113,18 +113,61 @@ print("Testing target:", y_test)
 
 ## Output
 
-The program displays:
-- The first five records and dataset information.
-- Dataset dimensions and missing-value counts.
-- The preprocessed training and testing feature arrays.
-- Training and testing dimensions.
-- Label-encoded target values.
+```text
+First five records:
+   Country   Age   Salary Purchased
+0    India  22.0  25000.0        No
+1      USA  35.0  65000.0       Yes
+2       UK   NaN  55000.0       Yes
+3    India  28.0      NaN        No
+4  Germany  42.0  80000.0       Yes
 
-Expected dimensions with the 20% test split:
-- Original dataset: 15 rows × 4 columns
-- Training set: 12 rows
-- Testing set: 3 rows
-- Processed feature arrays: 6 columns each
+Dataset information:
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 15 entries, 0 to 14
+Data columns (total 4 columns):
+ #   Column     Non-Null Count  Dtype
+---  ------     --------------  -----
+ 0   Country    15 non-null     object
+ 1   Age        13 non-null     float64
+ 2   Salary     13 non-null     float64
+ 3   Purchased  15 non-null     object
+dtypes: float64(2), object(2)
+memory usage: 612.0+ bytes
+
+Dataset shape: (15, 4)
+
+Missing values:
+Country      0
+Age          2
+Salary       2
+Purchased    0
+dtype: int64
+
+Preprocessed training data:
+[[-1.1945867  -1.35148438  0.          0.          0.          1.        ]
+ [-0.41125116  0.8823741   0.          0.          0.          1.        ]
+ [ 0.95958604  0.          1.          0.          0.          0.        ]
+ [ 0.         -0.06701575  0.          0.          1.          0.        ]
+ [ 0.37208438  0.49144887  0.          0.          0.          1.        ]
+ [ 0.56791827  0.65898825  0.          1.          0.          0.        ]
+ [ 1.74292158  1.3291458   1.          0.          0.          0.        ]
+ [ 0.         -1.46317731  0.          1.          0.          0.        ]
+ [-0.80291893 -0.90471268  0.          1.          0.          0.        ]
+ [ 1.35125381  1.60837811  1.          0.          0.          0.        ]
+ [-0.99875282  0.          0.          1.          0.          0.        ]
+ [-1.58625448 -1.18394499  0.          0.          1.          0.        ]]
+
+Preprocessed testing data:
+[[ 2.33042324  1.88761042  0.          0.          0.          1.        ]
+ [-0.01958339  0.10052363  0.          0.          1.          0.        ]
+ [-2.17375613 -1.74240962  0.          1.          0.          0.        ]]
+
+Training set shape: (12, 6)
+Testing set shape: (3, 6)
+Training target: [0 1 1 1 1 1 1 0 0 1 0 0]
+Testing target: [1 1 0]
+```
 
 ## Result
 The synthetic dataset was successfully preprocessed using Pandas and Scikit-learn. Missing values were imputed, categorical variables were encoded, the data was split into training and testing sets, and numerical features were standardized.
