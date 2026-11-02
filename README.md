@@ -23,28 +23,104 @@ To perform data preprocessing using Python, Pandas and Scikit-learn by handling 
 11. Display the preprocessed datasets and their dimensions.
 
 ## Dataset
-A synthetic dataset containing 15 records and the columns `Country`, `Age`, `Salary`, and `Purchased` is created inside the Python program. Missing values are deliberately included in the numerical columns to demonstrate imputation.
+A synthetic dataset containing 15 records and the columns `Country`, `Age`, `Salary`, and `Purchased` is created directly in the program. Missing values are included in the numerical columns to demonstrate imputation.
 
 **No external dataset or CSV file is required.**
 
 ## Program
-The complete, self-contained program is available in [`data_preprocessing.py`](data_preprocessing.py).
 
-Run it using:
+```python
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.impute import SimpleImputer
+from sklearn.preprocessing import OneHotEncoder, LabelEncoder, StandardScaler
+from sklearn.compose import ColumnTransformer
+from sklearn.pipeline import Pipeline
 
-```bash
-python data_preprocessing.py
+# Create a sample dataset directly in the program.
+data = {
+    "Country": [
+        "India", "USA", "UK", "India", "Germany",
+        "USA", "UK", "India", "Germany", "USA",
+        "India", "UK", "Germany", "USA", "India"
+    ],
+    "Age": [
+        22, 35, None, 28, 42,
+        31, 25, None, 38, 45,
+        29, 33, 40, 27, 36
+    ],
+    "Salary": [
+        25000, 65000, 55000, None, 80000,
+        72000, 35000, 30000, None, 90000,
+        40000, 58000, 85000, 32000, 68000
+    ],
+    "Purchased": [
+        "No", "Yes", "Yes", "No", "Yes",
+        "Yes", "No", "No", "Yes", "Yes",
+        "No", "Yes", "Yes", "No", "Yes"
+    ]
+}
+
+df = pd.DataFrame(data)
+
+print("First five records:\\n", df.head())
+print("\\nDataset information:")
+df.info()
+print("\\nDataset shape:", df.shape)
+print("\\nMissing values:\\n", df.isnull().sum())
+
+# Separate input features and target variable.
+X = df.drop(columns=["Purchased"])
+label_encoder = LabelEncoder()
+y = label_encoder.fit_transform(df["Purchased"])
+
+# Split the data before fitting preprocessing steps.
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+num_cols = ["Age", "Salary"]
+cat_cols = ["Country"]
+
+# Impute missing numerical values and standardize them.
+num_pipeline = Pipeline([
+    ("imputer", SimpleImputer(strategy="mean")),
+    ("scaler", StandardScaler())
+])
+
+# Impute missing categorical values and encode them.
+cat_pipeline = Pipeline([
+    ("imputer", SimpleImputer(strategy="most_frequent")),
+    ("encoder", OneHotEncoder(handle_unknown="ignore"))
+])
+
+preprocessor = ColumnTransformer([
+    ("num", num_pipeline, num_cols),
+    ("cat", cat_pipeline, cat_cols)
+])
+
+# Fit on training data and transform both sets.
+X_train_processed = preprocessor.fit_transform(X_train)
+X_test_processed = preprocessor.transform(X_test)
+
+print("\\nPreprocessed training data:\\n", X_train_processed)
+print("\\nPreprocessed testing data:\\n", X_test_processed)
+print("\\nTraining set shape:", X_train_processed.shape)
+print("Testing set shape:", X_test_processed.shape)
+print("Training target:", y_train)
+print("Testing target:", y_test)
 ```
 
 ## Output
+
 The program displays:
 - The first five records and dataset information.
 - Dataset dimensions and missing-value counts.
-- The transformed training and testing feature arrays.
+- The preprocessed training and testing feature arrays.
 - Training and testing dimensions.
 - Label-encoded target values.
 
-With the included dataset and a 20% test split, the expected dimensions are:
+Expected dimensions with the 20% test split:
 - Original dataset: 15 rows × 4 columns
 - Training set: 12 rows
 - Testing set: 3 rows
